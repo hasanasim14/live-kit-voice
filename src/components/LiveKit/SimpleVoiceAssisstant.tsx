@@ -8,11 +8,24 @@ import {
 import { Track } from "livekit-client";
 import { useEffect, useState } from "react";
 import { ScrollArea } from "../ui/scroll-area";
-// import "./SimpleVoiceAssistant.css";
 
 interface Message {
   type: string;
   text: string;
+}
+
+interface TranscriptionMessage {
+  type: "agent" | "user";
+  id: string;
+  text: string;
+  language?: string;
+  startTime?: number;
+  endTime?: number;
+  final?: boolean;
+  firstReceivedTime: number;
+  lastReceivedTime?: number;
+  receivedAtMediaTimestamp?: number;
+  receivedAt?: number;
 }
 
 const Message = ({ type, text }: Message) => {
@@ -35,13 +48,16 @@ const SimpleVoiceAssistant = () => {
     participant: localParticipant.localParticipant,
   });
 
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<TranscriptionMessage[]>([]);
 
   useEffect(() => {
-    const allMessages = [
-      ...(agentTranscriptions?.map((t) => ({ ...t, type: "agent" })) ?? []),
-      ...(userTranscriptions?.map((t) => ({ ...t, type: "user" })) ?? []),
+    const allMessages: TranscriptionMessage[] = [
+      ...(agentTranscriptions?.map((t) => ({ ...t, type: "agent" as const })) ??
+        []),
+      ...(userTranscriptions?.map((t) => ({ ...t, type: "user" as const })) ??
+        []),
     ].sort((a, b) => a.firstReceivedTime - b.firstReceivedTime);
+
     setMessages(allMessages);
   }, [agentTranscriptions, userTranscriptions]);
 

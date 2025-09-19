@@ -4,8 +4,6 @@ import { useState, useEffect, useCallback } from "react";
 import { LiveKitRoom, RoomAudioRenderer } from "@livekit/components-react";
 import "@livekit/components-styles";
 import SimpleVoiceAssistant from "./SimpleVoiceAssisstant";
-import { ChatInput } from "./ChatBox";
-// import ChatBox from "./ChatBox";
 
 const LiveKitModal = () => {
   const [token, setToken] = useState<string | null>(null);
